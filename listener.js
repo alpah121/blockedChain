@@ -7,9 +7,22 @@
 */
 
 var web3 = require('web3');
+var fs = require('fs');
+var contracts = {
+	"market" : {"abi" : "", "address" : "", get contract() {return new web3.eth.Contract(this.abi, this.address);}}
+	"govenor" : {"abi" : "", "address" : "", get contract() {return new web3.eth.Contract(this.abi, this.address);}}
+	};
+
 
 //setup mode
 
+//check whether or not this node is registered
+var market = contracts.market.contract();
+market.methods.register().call((error, result) => {console.log(result);});
+
+//write to keys file the keys we receive
+
+//switch over to listener mode
 
 //listener mode
 
