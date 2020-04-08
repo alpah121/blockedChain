@@ -5,3 +5,7 @@
 -gets paid for giving out key piece
 -updates stats in stats file and daily log
 */
+
+var web3 = require('web3');
+var KeyArray = []
+

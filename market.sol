@@ -18,14 +18,32 @@ struct Product {
 	address vendor;
 	string url;
 	}
-mapping(string=>Product) public products;
 
-function buy(string _product)
+event Purchase(
+	address _buyer,
+	string indexed _product
+);
+mapping(string=>Product) public products;
+uint totalInAccount;
+
+function buy(string _product, address affiliate)
 	{
-	
+	require(products[_product].price != 0);
+	require(products[_product].price == msg.value);
+	if (products[_product].vendor == affiliate)
+		{
+		products[_product].vendor.transfer(msg.value * 0.965);
+		}
+	else 
+		{
+		products[_product].vendor.transfer(msg.value * 0.465);
+		affiliate.transfer(msg.value * 0.5);
+		}
+	totalInAccount += msg.value * 0.035;
+	emit Purchase(msg.sender, _product);
 	}
 
-function addCourse()
+function addCourse() internal
 	{
 	
 	}
