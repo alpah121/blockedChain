@@ -13,6 +13,8 @@
 pragma ^0.4.4;
 
 contract market {
+uint fee = 0.035;
+address owner;
 struct Product {
 	uint price;
 	address vendor;
@@ -32,24 +34,36 @@ function buy(string _product, address affiliate)
 	require(products[_product].price == msg.value);
 	if (products[_product].vendor == affiliate)
 		{
-		products[_product].vendor.transfer(msg.value * 0.965);
+		products[_product].vendor.transfer(msg.value * (1 - fee));
 		}
 	else 
 		{
-		products[_product].vendor.transfer(msg.value * 0.465);
+		products[_product].vendor.transfer(msg.value * (0.5 - fee));
 		affiliate.transfer(msg.value * 0.5);
 		}
-	totalInAccount += msg.value * 0.035;
+	totalInAccount += msg.value * fee;
 	emit Purchase(msg.sender, _product);
 	}
 
-function addCourse() internal
+event Record(
+	address indexed _to,
+	string _product,
+	string _message
+);
+
+function recordShard(address _to, string _product, string _message) public
 	{
-	
+	address sender = msg.sender;
+	emit Record(_to, _product, _message);
+	sender.transfer((products[_product].price * fee)/12);
 	}
 
-function voteOnCourse()
+function addCourse(string _title,uint _price,address _vendor,string _url) public
 	{
-	
+	require(msg.sender == owner);
+	require(products[_title].price == 0);
+	require(_price >= 0.5 && _price <= 10);
+	products[_title] = Product(_price, _vendor, _url);
 	}
+
 }

@@ -7,5 +7,11 @@
 */
 
 var web3 = require('web3');
-var KeyArray = []
+
+//setup mode
+
+
+//listener mode
+
+
 
